@@ -1,7 +1,7 @@
 # ~/~ begin <<docs/src/data-export.md#src/Export.jl>>[init]
 module Export
 
-export Data, DataSlice, DataColumn, Header, CSV, read_data, read_slice,  read_column, data_export
+export Data, DataSlice, DataColumn, Header, CSV, read_data, read_slice, read_column, data_export
 
 using HDF5
 import CSV: write as write_csv
@@ -289,6 +289,12 @@ function data_export(::Type{CSVExportTrait{:stratigraphic_column}},
     write_unitful_csv(io, sc)
 end
 
+function data_export(::Type{CSVExportTrait{:water_depth}},
+    io::IO, header::Header, data::Data, grid_locations::Vector{NTuple{2,Int}})
+    wd = extract_wd(header, data, grid_locations)
+    write_unitful_csv(io, wd)
+end
+
 """
     extract_sac(header::Header, data::Data, grid_locations::Vector{NTuple{2,Int}})
 
@@ -313,6 +319,19 @@ function extract_sc(header::Header, data::Data, grid_locations::Vector{NTuple{2,
     DataFrame("time" => header.axes.t[1:end-1],
         ("sc$(i)_f$(f)" => stratigraphic_column(header, data, loc, f)
          for f in 1:n_facies, (i, loc) in enumerate(grid_locations))...)
+end
+
+"""
+    extract_wd(header::Header, data::Data, grid_locations::Vector{NTuple{2,Int}})
+
+Extract the water depth from the data. Returns a `DataFrame` with `time` and `wd<n>` columns where `<n>`
+is in the range `1:length(grid_locations)`.
+"""
+function extract_wd(header::Header, data::Data, grid_locations::Vector{NTuple{2,Int}})
+    na = [CartesianIndex()]
+    wd = header.subsidence_rate .* header.axes.t[na, na, :] .- header.initial_topography[:, :, na] .- data.sediment_elevation
+    DataFrame("time" => header.axes.t,
+        ("wd$(i)" => wd[loc..., :] for (i, loc) in enumerate(grid_locations))...)
 end
 # ~/~ end
 

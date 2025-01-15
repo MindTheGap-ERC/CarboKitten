@@ -63,10 +63,11 @@ function main()
 
     data_export(
         CSV(tuple.(10:20:70, 25),
-          :sediment_accumulation_curve => "$(PATH)/$(TAG)_sac.csv",
-          :age_depth_model => "$(PATH)/$(TAG)_adm.csv",
-          :stratigraphic_column => "$(PATH)/$(TAG)_sc.csv",
-          :metadata => "$(PATH)/$(TAG).toml"),
+            :sediment_accumulation_curve => "$(PATH)/$(TAG)_sac.csv",
+            :age_depth_model => "$(PATH)/$(TAG)_adm.csv",
+            :stratigraphic_column => "$(PATH)/$(TAG)_sc.csv",
+            :water_depth => "$(PATH)/$(TAG)_wd.csv",
+            :metadata => "$(PATH)/$(TAG).toml"),
         "$(PATH)/$(TAG).h5")
 end
 

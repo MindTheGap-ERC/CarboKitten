@@ -20,6 +20,7 @@ CSV(tuple.(10:20:70, 25),
   :sediment_accumulation_curve => "run_06_sac.csv",
   :age_depth_model             => "run_06_adm.csv",
   :stratigraphic_column        => "run_06_sc.csv",
+  :water_depth                 => "run_06_wd.csv",
   :metadata                    => "run_06.toml")
 ```
 
@@ -28,6 +29,7 @@ There is a `data_export` function that can be overloaded with any `ExportSpcific
 - `:sediment_accumulation_curve`  (SAC) is another term for `sediment_height` elsewhere in the code.
 - `:age_depth_model` (ADM) is a monotonic version of the SAC, relating depth to age.
 - `:stratigraphic_column` amount of deposited material per facies per time step, corrected for disintegrated material. The cumulative sum of the SC should add up to the ADM.
+- `:water_depth` the water depth as a function of time.
 - `:metadata` some metadata, written as a TOML file.
 
 ## Tests
@@ -297,6 +299,12 @@ function data_export(::Type{CSVExportTrait{:stratigraphic_column}},
     write_unitful_csv(io, sc)
 end
 
+function data_export(::Type{CSVExportTrait{:water_depth}},
+    io::IO, header::Header, data::Data, grid_locations::Vector{NTuple{2,Int}})
+    wd = extract_wd(header, data, grid_locations)
+    write_unitful_csv(io, wd)
+end
+
 """
     extract_sac(header::Header, data::Data, grid_locations::Vector{NTuple{2,Int}})
 
@@ -322,12 +330,25 @@ function extract_sc(header::Header, data::Data, grid_locations::Vector{NTuple{2,
         ("sc$(i)_f$(f)" => stratigraphic_column(header, data, loc, f)
          for f in 1:n_facies, (i, loc) in enumerate(grid_locations))...)
 end
+
+"""
+    extract_wd(header::Header, data::Data, grid_locations::Vector{NTuple{2,Int}})
+
+Extract the water depth from the data. Returns a `DataFrame` with `time` and `wd<n>` columns where `<n>`
+is in the range `1:length(grid_locations)`.
+"""
+function extract_wd(header::Header, data::Data, grid_locations::Vector{NTuple{2,Int}})
+    na = [CartesianIndex()]
+    wd = header.subsidence_rate .* header.axes.t[na, na, :] .- header.initial_topography[:, :, na] .- data.sediment_elevation
+    DataFrame("time" => header.axes.t,
+        ("wd$(i)" => wd[loc..., :] for (i, loc) in enumerate(grid_locations))...)
+end
 ```
 
 ``` {.julia file=src/Export.jl}
 module Export
 
-export Data, DataSlice, DataColumn, Header, CSV, read_data, read_slice,  read_column, data_export
+export Data, DataSlice, DataColumn, Header, CSV, read_data, read_slice, read_column, data_export
 
 using HDF5
 import CSV: write as write_csv
@@ -473,6 +494,7 @@ const Amount = typeof(1.0u"m")
                 :sediment_accumulation_curve => joinpath(path, "sac.csv"),
                 :age_depth_model => joinpath(path, "adm.csv"),
                 :stratigraphic_column => joinpath(path, "sc.csv"),
+                :water_depth => joinpath(path, "wd.csv"),
                 :metadata => joinpath(path, "metadata.toml"))
             data_export(spec, HEADER1, DATA1)
             for f in values(spec.output_files)

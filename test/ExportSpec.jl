@@ -92,6 +92,7 @@ const GRID_LOCATIONS1 = [(1, 1), (2, 1), (3, 1)]
                 :sediment_accumulation_curve => joinpath(path, "sac.csv"),
                 :age_depth_model => joinpath(path, "adm.csv"),
                 :stratigraphic_column => joinpath(path, "sc.csv"),
+                :water_depth => joinpath(path, "wd.csv"),
                 :metadata => joinpath(path, "metadata.toml"))
             data_export(spec, HEADER1, DATA1)
             for f in values(spec.output_files)
