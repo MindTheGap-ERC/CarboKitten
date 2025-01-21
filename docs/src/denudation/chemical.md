@@ -60,7 +60,7 @@ function equilibrium(temp::Float64, pco2::Float64, precip::Float64, facies)
     p = karst_denudation_parameters(temp)
     mass_density = facies.mass_density ./ u"kg/m^3"
     eq_c = (pco2 .* (p.K1 * p.KC * p.KH) ./ (4 * p.K2 * p.activity_Ca .* (p.activity_Alk)^2)) .^ (1 / 3)
-    eq_d = 1000 * precip .* facies.infiltration_coefficient * 40 * 1000 .* eq_c ./ mass_density
+    eq_d = 1e6 * precip .* facies.infiltration_coefficient * 40 * 1000 .* eq_c ./ mass_density
     (concentration=eq_c, denudation=eq_d)
 end
 ```
@@ -104,7 +104,7 @@ function dissolution(temp, precip, pco2, alpha, water_depth, facies)
     reactive_surface =  facies.reactive_surface ./u"m^2/m^3"
     λ = precip * 100 .* facies.infiltration_coefficient ./ (alpha .* reactive_surface)
     eq = equilibrium(temp, pco2, precip, facies) # pass ceq Deq from the last function
-    eq.denudation .* (1 - (λ ./ water_depth) .* (1 - exp.(-water_depth ./ λ))) * u"m/kyr"
+    eq.denudation .* (1 - (λ ./ -water_depth) .* (1 - exp.(water_depth ./ λ))) * u"m/Myr"
 end
 ```
 
@@ -139,18 +139,18 @@ function denudation(::Box{BT}, p::Dissolution, water_depth, slope, facies, state
     precip = p.precip ./u"m"
     pco2 = p.pco2 ./1.0u"atm"
     reactionrate = p.reactionrate ./u"m/yr"
-    denudation_mass = zeros(typeof(1.0u"m/kyr"), size(state.ca)...)
+    denudation_rate = zeros(typeof(1.0u"m/Myr"), length(facies), size(state.ca)...)
 
     for idx in CartesianIndices(state.ca)
         f = state.ca[idx]
         if f == 0
             continue
         end
-        if water_depth[idx] >= 0
-            denudation_mass[idx] = dissolution(temp, precip, pco2, reactionrate, water_depth[idx], facies[f])
+        if water_depth[idx] <= 0
+            denudation_rate[f, idx] = dissolution(temp, precip, pco2, reactionrate, water_depth[idx], facies[f])
         end
     end
-    return denudation_mass
+    return denudation_rate
 end
 
 function redistribution(box::Box{BT}, p::Dissolution, denudation_mass, water_depth) where {BT<:Boundary}

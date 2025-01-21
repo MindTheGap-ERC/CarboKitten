@@ -14,6 +14,6 @@ using .EmpiricalDenudationMod: EmpiricalDenudation
 using .PhysicalErosionMod: PhysicalErosion
 using .NoDenudationMod: NoDenudation
 
-export Dissolution, EmpiricalDenudation, PhysicalErosion, NoDenudation, denudation, redistribution
+export Dissolution, EmpiricalDenudation, PhysicalErosion, NoDenudation, denudation, redistribution, slope_kernel
 
 end

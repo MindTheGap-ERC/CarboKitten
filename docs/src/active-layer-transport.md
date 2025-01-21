@@ -429,16 +429,28 @@ end
 Prepares the disintegration step. Returns a function `f!(state::State)`. The returned function
 modifies the state, popping sediment from the `sediment_buffer` and returns an array of `Amount`.
 """
-function disintegration(input)
+function define_h(input::AbstractInput,state::AbstractState)
     max_h = input.disintegration_rate * input.time.Δt
-    output = Array{Float64, 3}(undef, n_facies(input), input.box.grid_size...)
-
-    return function(state)
-        h = min.(max_h, state.sediment_height)
-        state.sediment_height .-= h
-        pop_sediment!(state.sediment_buffer, h ./ input.depositional_resolution .|> NoUnits, output)
-        return output .* input.depositional_resolution
+    w = water_depth(input)(state)
+    h = zeros(typeof(max_h), input.box.grid_size...)
+    for i in CartesianIndices(input.box.grid_size)
+        if w[i] > 0.0u"m"
+            h[i] = min.(max_h, state.sediment_height[i])
+        end
     end
+    return h
+end
+
+function disintegration(input)
+    #max_h = input.disintegration_rate * input.time.Δt
+    output = Array{Float64, 3}(undef, n_facies(input), input.box.grid_size...)
+        return function(state)
+                #h = min.(max_h, state.sediment_height)
+                h = define_h(input, state)
+                state.sediment_height .-= h
+                pop_sediment!(state.sediment_buffer, h ./ input.depositional_resolution .|> NoUnits, output)
+                return output .* input.depositional_resolution 
+        end
 end
 
 """

@@ -3,6 +3,100 @@
     {
       "description": null,
       "creates": [
+        "docs/src/_fig/bs92-fig8.svg"
+      ],
+      "requires": [
+        "examples/model/bs92/using_ode.jl"
+      ],
+      "runner": "julia",
+      "stdout": null,
+      "stdin": null,
+      "script": null,
+      "path": "examples/model/bs92/fig8.jl"
+    },
+    {
+      "description": null,
+      "creates": [
+        "data/output/bs92.h5"
+      ],
+      "requires": [],
+      "runner": "julia",
+      "stdout": null,
+      "stdin": null,
+      "script": null,
+      "path": "examples/model/bs92/run.jl"
+    },
+    {
+      "description": null,
+      "creates": [
+        "docs/src/_fig/bs92-summary.png"
+      ],
+      "requires": [
+        "data/output/bs92.h5"
+      ],
+      "runner": "julia",
+      "stdout": null,
+      "stdin": null,
+      "script": null,
+      "path": "examples/model/bs92/plot.jl"
+    },
+    {
+      "description": null,
+      "creates": [
+        "data/output/bs92-multi-facies.h5"
+      ],
+      "requires": [],
+      "runner": "julia",
+      "stdout": null,
+      "stdin": null,
+      "script": null,
+      "path": "examples/model/bs92/multi-facies-run.jl"
+    },
+    {
+      "description": null,
+      "creates": [
+        "docs/src/_fig/bs92-multi-facies.png"
+      ],
+      "requires": [
+        "data/output/bs92-multi-facies.h5"
+      ],
+      "runner": "julia",
+      "stdout": null,
+      "stdin": null,
+      "script": null,
+      "path": "examples/model/bs92/multi-facies-plot.jl"
+    },
+    {
+      "description": null,
+      "creates": [
+        "data/output/cap1.h5"
+      ],
+      "requires": [
+        "src/Models/CAP.jl"
+      ],
+      "runner": "julia",
+      "stdout": null,
+      "stdin": null,
+      "script": null,
+      "path": "examples/model/cap/run.jl"
+    },
+    {
+      "description": null,
+      "creates": [
+        "docs/src/_fig/cap1-summary.png"
+      ],
+      "requires": [
+        "data/output/cap1.h5"
+      ],
+      "runner": "julia",
+      "stdout": null,
+      "stdin": null,
+      "script": null,
+      "path": "examples/model/cap/plot.jl"
+    },
+    {
+      "description": null,
+      "creates": [
         "docs/src/_fig/eca.png"
       ],
       "requires": [
@@ -101,34 +195,6 @@
     {
       "description": null,
       "creates": [
-        "docs/src/_fig/active-layer-production-patch.png"
-      ],
-      "requires": [
-        "examples/transport/active-layer.jl"
-      ],
-      "runner": "julia",
-      "stdout": null,
-      "stdin": null,
-      "script": null,
-      "path": "examples/transport/active-layer-plot-production.jl"
-    },
-    {
-      "description": null,
-      "creates": [
-        "docs/src/_fig/active-layer-test.png"
-      ],
-      "requires": [
-        "examples/transport/active-layer.jl"
-      ],
-      "runner": "julia",
-      "stdout": null,
-      "stdin": null,
-      "script": null,
-      "path": "examples/transport/active-layer-plot-result.jl"
-    },
-    {
-      "description": null,
-      "creates": [
         "data/output/alcap-example.h5"
       ],
       "requires": [
@@ -157,96 +223,30 @@
     {
       "description": null,
       "creates": [
-        "data/output/cap1.h5"
+        "docs/src/_fig/active-layer-production-patch.png"
       ],
       "requires": [
-        "src/Models/CAP.jl"
+        "examples/transport/active-layer.jl"
       ],
       "runner": "julia",
       "stdout": null,
       "stdin": null,
       "script": null,
-      "path": "examples/model/cap/run.jl"
+      "path": "examples/transport/active-layer-plot-production.jl"
     },
     {
       "description": null,
       "creates": [
-        "docs/src/_fig/cap1-summary.png"
+        "docs/src/_fig/active-layer-test.png"
       ],
       "requires": [
-        "data/output/cap1.h5"
+        "examples/transport/active-layer.jl"
       ],
       "runner": "julia",
       "stdout": null,
       "stdin": null,
       "script": null,
-      "path": "examples/model/cap/plot.jl"
-    },
-    {
-      "description": null,
-      "creates": [
-        "docs/src/_fig/bs92-fig8.svg"
-      ],
-      "requires": [
-        "examples/model/bs92/using_ode.jl"
-      ],
-      "runner": "julia",
-      "stdout": null,
-      "stdin": null,
-      "script": null,
-      "path": "examples/model/bs92/fig8.jl"
-    },
-    {
-      "description": null,
-      "creates": [
-        "data/output/bs92.h5"
-      ],
-      "requires": [],
-      "runner": "julia",
-      "stdout": null,
-      "stdin": null,
-      "script": null,
-      "path": "examples/model/bs92/run.jl"
-    },
-    {
-      "description": null,
-      "creates": [
-        "docs/src/_fig/bs92-summary.png"
-      ],
-      "requires": [
-        "data/output/bs92.h5"
-      ],
-      "runner": "julia",
-      "stdout": null,
-      "stdin": null,
-      "script": null,
-      "path": "examples/model/bs92/plot.jl"
-    },
-    {
-      "description": null,
-      "creates": [
-        "data/output/bs92-multi-facies.h5"
-      ],
-      "requires": [],
-      "runner": "julia",
-      "stdout": null,
-      "stdin": null,
-      "script": null,
-      "path": "examples/model/bs92/multi-facies-run.jl"
-    },
-    {
-      "description": null,
-      "creates": [
-        "docs/src/_fig/bs92-multi-facies.png"
-      ],
-      "requires": [
-        "data/output/bs92-multi-facies.h5"
-      ],
-      "runner": "julia",
-      "stdout": null,
-      "stdin": null,
-      "script": null,
-      "path": "examples/model/bs92/multi-facies-plot.jl"
+      "path": "examples/transport/active-layer-plot-result.jl"
     },
     {
       "description": null,
@@ -279,6 +279,10 @@
     {
       "name": "figures",
       "requires": [
+        "docs/src/_fig/bs92-fig8.svg",
+        "docs/src/_fig/bs92-summary.png",
+        "docs/src/_fig/bs92-multi-facies.png",
+        "docs/src/_fig/cap1-summary.png",
         "docs/src/_fig/eca.png",
         "docs/src/_fig/life.gif",
         "docs/src/_fig/boundary_types.png",
@@ -286,13 +290,9 @@
         "docs/src/_fig/production_curve.svg",
         "docs/src/_fig/sediment_profile.png",
         "docs/src/_fig/glamour_view.png",
+        "docs/src/_fig/alcaps-alternative.png",
         "docs/src/_fig/active-layer-production-patch.png",
         "docs/src/_fig/active-layer-test.png",
-        "docs/src/_fig/alcaps-alternative.png",
-        "docs/src/_fig/cap1-summary.png",
-        "docs/src/_fig/bs92-fig8.svg",
-        "docs/src/_fig/bs92-summary.png",
-        "docs/src/_fig/bs92-multi-facies.png",
         "docs/src/_fig/miller-sea-level.svg",
         "docs/src/_fig/lisiecki-selection.svg",
         "docs/src/_fig/lisiecki-sea-level-summary.png"

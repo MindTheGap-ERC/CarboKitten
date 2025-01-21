@@ -1,4 +1,8 @@
-# ~/~ begin <<docs/src/models/with-denudation.md#src/Models/WithDenudation.jl>>[init]
+# Model including denudation
+
+This is largely identical to the ALCAP model.
+
+``` {.julia file=src/Models/WithDenudation.jl}
 @compose module WithDenudation
 @mixin Tag, H5Writer, CAProduction, ActiveLayer, Denudation
 
@@ -93,4 +97,4 @@ function write_header(fid, input::AbstractInput)
     @for_each(P -> P.write_header(fid, input), PARENTS)
 end
 end
-# ~/~ end
+```
